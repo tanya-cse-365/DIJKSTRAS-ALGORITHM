@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dijkstra's Algorithm Visualizer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5faff;
+      text-align: center;
+      padding: 20px;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      background-color: white;
+      margin: 20px auto;
+      display: block;
+    }
+    .controls {
+      margin: 20px;
+    }
+    .btn {
+      padding: 10px 20px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    .slider-label {
+      margin: 0 10px;
+    }
+    .legend {
+      text-align: left;
+      max-width: 800px;
+      margin: 20px auto;
+    }
+    #observations, #result {
+      max-width: 800px;
+      margin: 20px auto;
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #1976d2;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Dijkstra's Algorithm Visualizer</h1>
+
+<div>
+  <textarea id="graphInput" rows="6" cols="50">0 1 4
+0 2 1
+2 1 2
+1 3 1
+2 3 5</textarea><br>
+  Start Node: <input type="number" id="startNode" value="0">
+</div>
+
+<div class="controls">
+  <button class="btn" onclick="startDijkstra()">Start</button>
+  <button class="btn" onclick="resetGraph()">Reset</button>
+  <label class="slider-label">Min. Speed</label>
+  <input type="range" id="speedControl" min="100" max="2000" step="100" value="1000">
+  <label class="slider-label">Max. Speed</label>
+</div>
+
+<canvas id="graphCanvas" width="800" height="500"></canvas>
+
+<div id="observations"><strong>Observations:</strong><br>Click "Start" to run Dijkstra's Algorithm.</div>
+<div id="result"></div>
+
+<div class="legend">
+  <strong>Legend:</strong><br>
+  <span style="color: gray;">●</span> Unvisited Node &nbsp;&nbsp;
+  <span style="color: blue;">●</span> Visited Node &nbsp;&nbsp;
+  <span style="color: black;">→</span> Edge &nbsp;&nbsp;
+  <span style="color: blue;">→</span> Traversed Edge
+</div>
+
+<script>
+const canvas = document.getElementById('graphCanvas');
+const ctx = canvas.getContext('2d');
+let positions = {}, edges = [], graph = {}, distances = {}, prev = {}, visited = {};
+let animationQueue = [], edgeHighlights = [];
+
+function parseGraph(input) {
+  const lines = input.trim().split('\n');
+  graph = {};
+  edges = [];
+
+  lines.forEach(line => {
+    const [u, v, w] = line.trim().split(' ');
+    if (!graph[u]) graph[u] = [];
+    if (!graph[v]) graph[v] = [];
+    graph[u].push({ node: v, weight: +w });
+    graph[v].push({ node: u, weight: +w }); // Comment out if directed
+    edges.push([u, v, w]);
+  });
+}
+
+function drawArrow(fromX, fromY, toX, toY, color = '#555') {
+  const headlen = 10;
+  const angle = Math.atan2(toY - fromY, toX - fromX);
+
+  ctx.beginPath();
+  ctx.moveTo(fromX, fromY);
+  ctx.lineTo(toX, toY);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(toX, toY);
+  ctx.lineTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6));
+  ctx.lineTo(toX - headlen * Math.cos(angle + Math.PI / 6), toY - headlen * Math.sin(angle + Math.PI / 6));
+  ctx.lineTo(toX, toY);
+  ctx.fillStyle = color;
+  ctx.fill();
+}
+
+function drawGraph(highlightEdges = []) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const nodes = Object.keys(graph);
+  const radius = 200;
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+
+  positions = {};
+  nodes.forEach((node, i) => {
+    const angle = (2 * Math.PI * i) / nodes.length;
+    const x = centerX + radius * Math.cos(angle);
+    const y = centerY + radius * Math.sin(angle);
+    positions[node] = { x, y };
+  });
+
+  edges.forEach(([u, v, w], idx) => {
+  const from = positions[u];
+  const to = positions[v];
+
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  const offset = 10;
+
+  // Calculate a perpendicular offset vector
+  const offsetX = -dy / len * offset;
+  const offsetY = dx / len * offset;
+
+  // Unique key for each edge regardless of order
+  const key1 = u + '-' + v;
+  const key2 = v + '-' + u;
+
+  // Count how many edges already drawn between u and v
+  let count = 0;
+  for (let i = 0; i < idx; i++) {
+    if ((edges[i][0] === u && edges[i][1] === v) || (edges[i][0] === v && edges[i][1] === u)) {
+      count++;
+    }
+  }
+
+  const fromX = from.x + offsetX * count;
+  const fromY = from.y + offsetY * count;
+  const toX = to.x + offsetX * count;
+  const toY = to.y + offsetY * count;
+
+  drawArrow(fromX, fromY, toX, toY, highlightEdges.includes(key1) || highlightEdges.includes(key2) ? 'blue' : '#888');
+
+  // Label the weight
+  const midX = (fromX + toX) / 2;
+  const midY = (fromY + toY) / 2;
+  ctx.fillStyle = 'black';
+  ctx.font = '12px Arial';
+  ctx.fillText(w, midX + 10, midY - 10);
+});
+
+  nodes.forEach(node => {
+    const { x, y } = positions[node];
+    ctx.beginPath();
+    ctx.arc(x, y, 20, 0, 2 * Math.PI);
+    ctx.fillStyle = visited[node] ? 'blue' : '#ccc';
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center';
+    ctx.fillText(node, x, y + 5);
+
+    if (distances[node] !== undefined && distances[node] !== Infinity && animationQueue.length === 0) {
+      ctx.fillStyle = 'black';
+      ctx.fillText(`(${distances[node]})`, x, y + 25);
+    }
+  });
+}
+
+function dijkstra(start) {
+  distances = {}, prev = {}, visited = {}, animationQueue = [], edgeHighlights = [];
+
+  for (let node in graph) {
+    distances[node] = Infinity;
+    prev[node] = null;
+    visited[node] = false;
+  }
+
+  distances[start] = 0;
+  let pq = [{ node: start, dist: 0 }];
+  let unvisitedNodes = new Set(Object.keys(graph));
+
+  while (pq.length > 0) {
+    pq.sort((a, b) => a.dist - b.dist);
+    let { node } = pq.shift();
+    if (visited[node]) continue;
+
+    animationQueue.push({ type: 'visit', node });
+    visited[node] = true;
+    unvisitedNodes.delete(node);
+
+    // Get the neighbors of the node and relax edges
+    for (let neighbor of graph[node]) {
+      const alt = distances[node] + neighbor.weight;
+      if (alt < distances[neighbor.node]) {
+        distances[neighbor.node] = alt;
+        prev[neighbor.node] = node;
+        pq.push({ node: neighbor.node, dist: alt });
+
+        animationQueue.push({ type: 'edge', from: node, to: neighbor.node });
+      }
+    }
+
+    // Display the visited and unvisited nodes in observations
+    document.getElementById('observations').innerHTML = `<strong>Visited Nodes:</strong> ${Object.keys(visited).filter(v => visited[v]).join(', ')}<br><strong>Next Nodes:</strong> ${[...unvisitedNodes].join(', ')}`;
+  }
+}
+
+function animateGraph() {
+  if (animationQueue.length === 0) {
+    showResult();
+    return;
+  }
+
+  const action = animationQueue.shift();
+
+  if (action.type === 'visit') {
+    document.getElementById('observations').innerHTML = `<strong>Visiting:</strong> Node ${action.node}`;
+    visited[action.node] = true;
+  }
+
+  if (action.type === 'edge') {
+    document.getElementById('observations').innerHTML = `<strong>Relaxing Edge:</strong> ${action.from} → ${action.to}`;
+    edgeHighlights.push(action.from + '-' + action.to);
+  }
+
+  drawGraph(edgeHighlights);
+  setTimeout(animateGraph, document.getElementById('speedControl').value);
+}
+
+
+function startDijkstra() {
+  const input = document.getElementById('graphInput').value;
+  const start = document.getElementById('startNode').value;
+  parseGraph(input);
+  dijkstra(start);
+  drawGraph();
+  document.getElementById('result').innerHTML = '';
+  animateGraph();
+}
+
+function resetGraph() {
+  document.getElementById('observations').innerHTML = 'Click "Start" to run Dijkstra\'s Algorithm.';
+  document.getElementById('result').innerHTML = '';
+  visited = {};
+  edgeHighlights = [];
+  drawGraph();
+}
+
+function showResult() {
+  const start = document.getElementById('startNode').value;
+  let output = `<strong>Shortest distances from node ${start}:</strong><br><br>`;
+  for (let node in distances) {
+    output += `To node ${node}: ${distances[node]}<br>`;
+  }
+  document.getElementById('result').innerHTML = output;
+  drawGraph(edgeHighlights);
+}
+</script>
+
+</body>
+</html>

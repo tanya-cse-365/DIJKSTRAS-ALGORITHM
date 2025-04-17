@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dijkstra's Virtual Lab</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      display: flex;
+      min-height: 100vh;
+      font-size: large;
+      background: url("dijkstras_picture_background.png");
+      scroll-behavior: smooth;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 200px;
+      background-color: #e3f2ff;
+      padding: 30px 15px;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+    }
+
+    .sidebar h2 {
+      color: #b77cff;
+      font-size: 22px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .sidebar ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .sidebar li {
+      margin: 15px 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: #0044cc;
+      font-weight: 500;
+      font-size: large;
+      margin-left: 10px;
+    }
+
+    .sidebar a.active,
+    .sidebar a:hover {
+      text-decoration: underline;
+      color: #6200ea;
+    }
+
+    .main {
+      flex-grow: 1;
+      padding: 30px;
+      background: rgb(180, 224, 255);
+      border-radius: 12px;
+      margin: 20px;
+      box-shadow: 0 0 20px rgba(235, 242, 246, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #1a00b8;
+    }
+
+    h3 {
+      color: #7100b8;
+    }
+
+    section {
+      margin-bottom: 30px;
+      color: #4d00ff;
+    }
+
+    .question {
+      margin: 15px 0;
+      color: #c15efe;
+    }
+
+    .question p {
+      font-weight: bold;
+    }
+
+    .options label {
+      display: block;
+      margin: 4px 0;
+      cursor: pointer;
+      color: #4d00ff;
+    }
+
+    .button {
+      background: #3800e0;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .button:hover {
+      background: #4d00ff;
+    }
+
+    .answer {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2><i class="fas fa-project-diagram"></i> MENU</h2>
+    <ul>
+      <li><i class="fas fa-bullseye"></i><a href="#aim">Aim</a></li>
+      <li><i class="fas fa-lightbulb"></i><a href="#objectives">Learning Objectives</a></li>
+      <li><i class="fas fa-question-circle"></i><a href="#pretest">Pretest</a></li>
+      <li><i class="fas fa-code"></i><a href="#algorithm">Algorithm</a></li>
+      <li><i class="fas fa-vial"></i><a href="#simulation">Simulation</a></li>
+      <li><i class="fas fa-check-circle"></i><a href="#posttest">Posttest</a></li>
+      <li><i class="fas fa-network-wired"></i><a href="#applications">Applications</a></li>
+      <li><i class="fas fa-book"></i><a href="#references">References</a></li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <h1>Dijkstra’s Virtual Lab</h1>
+<br>
+    <section id="aim">
+      <h3>1. Aim</h3>
+      <p>Understand and implement Dijkstra's Shortest Path Algorithm.</p>
+    </section>
+    <br>
+    <section id="objectives">
+      <h3>2. Learning Objectives</h3>
+      <ul>
+        <li>Describe 2 real-world scenarios for shortest path algorithms.</li>
+        <li>Visually demonstrate Dijkstra's algorithm.</li>
+        <li>Derive space/time complexity.</li>
+        <li>Apply Dijkstra's in real-world problems.</li>
+      </ul>
+    </section>
+    <br>
+    <section id="pretest">
+      <h3>3. Pretest</h3>
+      <div class="question" id="q1">
+        <p>1. Which data structure is best suitable for performing breadth first search?</p>
+        <div class="options">
+          <label><input type="radio" name="q1" value="a"> a. Stack</label>
+          <label><input type="radio" name="q1" value="b"> b. Queue</label>
+          <label><input type="radio" name="q1" value="c"> c. Array</label>
+          <label><input type="radio" name="q1" value="d"> d. None of the above</label>
+        </div>
+      </div>
+      <br>
+      <div class="question" id="q2">
+        <p>2. Which data structure is best suitable for performing Depth first search?</p>
+        <div class="options">
+          <label><input type="radio" name="q2" value="a"> a. Stack</label>
+          <label><input type="radio" name="q2" value="b"> b. Queue</label>
+          <label><input type="radio" name="q2" value="c"> c. Array</label>
+          <label><input type="radio" name="q2" value="d"> d. None of the above</label>
+        </div>
+      </div>
+      <br>
+      <div class="question" id="q3">
+        <p>3. Given a tree of nodes. We know that the element we want to search is closer to the root node than farther. Which would be the best method to search for it?</p>
+        <div class="options">
+          <label><input type="radio" name="q3" value="a"> a. Binary Search</label>
+          <label><input type="radio" name="q3" value="b"> b. Breadth First Search</label>
+          <label><input type="radio" name="q3" value="c"> c. Depth First Search</label>
+          <label><input type="radio" name="q3" value="d"> d. All are equally good</label>
+        </div>
+      </div>
+      <br>
+      <button class="button" onclick="checkAnswers()">Submit Answers</button>
+      <div id="results" class="answer"></div>
+    </section>
+    <br>
+    <section id="algorithm">
+      <h3>4. Algorithm & Time and Space Complexity Analysis</h3>
+      <a href="dijkstra-analysis.html"><button class="button">Go to Analysis</button></a>
+    </section>
+    <br>
+    <section id="simulation">
+      <h3>6. Simulation</h3>
+      <p>Explore Dijkstra's Algorithm in action!</p>
+      <a href="dijkstra-simulation.html"><button class="button">Go to Simulation</button></a>
+    </section>
+    <br>
+    <section id="posttest">
+      <h3>7. Posttest</h3>
+      <div class="question" id="pq1">
+        <p>1. What is the time complexity of Dijikstra's algorithm? (V is the number of vertices in the graph)
+        </p>
+        <div class="options">
+          <label><input type="radio" name="pq1" value="a"> a. O(V)</label>
+          <label><input type="radio" name="pq1" value="b"> b. O(V^2)</label>
+          <label><input type="radio" name="pq1" value="c"> c. O(log V)</label>
+          <label><input type="radio" name="pq1" value="d"> d. None of the above</label>
+        </div>
+      </div>
+      <br>
+      <div class="question" id="pq2">
+        <p>2. Which of the following data structure can help decrease the time complexity of Dijikstra’s algorithm?</p>
+        <div class="options">
+          <label><input type="radio" name="pq2" value="a"> a. Min Priority Queue</label>
+          <label><input type="radio" name="pq2" value="b"> b. Queue</label>
+          <label><input type="radio" name="pq2" value="c"> c. Heap</label>
+          <label><input type="radio" name="pq2" value="d"> d. Stack</label>
+        </div>
+      </div>
+      <br>
+      <div class="question" id="pq3">
+        <p>3. Dijkstras Algorithm is used to find: </p>
+            <div class="options">
+              <label><input type="radio" name="pq3" value="a"> a. Cycles in a graph</label>
+              <label><input type="radio" name="pq3" value="b"> b. Single soure shortest path</label>
+              <label><input type="radio" name="pq3" value="c"> c. Network flow</label>
+              <label><input type="radio" name="pq3" value="d"> d. Sorted order of nodes</label>
+            </div>
+          </div>
+          <br>
+      <button class="button" onclick="checkPosttestAnswers()">Submit Answers</button>
+      <div id="postResults" class="answer"></div>
+    </section>
+    <br>
+    <section id="applications">
+      <h3>8. Applications</h3>
+      <a href="dijkstra-application.html"><button class="button">Go to Applications</button></a>
+    </section>
+    <br>
+    <section id="references">
+      <h3 onclick="toggleReferences()" style="cursor:pointer;">📚 References <span id="toggle-symbol">[+]</span></h3>
+      <div id="references-content" style="display: none;">
+        <ul>
+          <li><a href="https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm" target="_blank">Wikipedia - Dijkstra's Algorithm</a></li>
+          <li><a href="https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/" target="_blank">GeeksforGeeks - Dijkstra’s Algorithm</a></li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+
+  <script>
+    function checkAnswers() {
+      const correct = { q1: "b", q2: "a", q3: "b" };
+      let score = 0;
+      Object.keys(correct).forEach(q => {
+        const selected = document.querySelector(input[name="${q}"],checked);
+        if (selected && selected.value === correct[q]) score++;
+      });
+      document.getElementById("results").textContent = 'You got ${score} out of ${Object.keys(correct).length} correct.';
+    }
+
+    function checkPosttestAnswers() {
+      const correct = { pq1: "b", pq2: "a", pq3: "b" };
+      let score = 0;
+      Object.keys(correct).forEach(q => {
+        const selected = document.querySelector(input[name="${q}"],checked);
+        if (selected && selected.value === correct[q]) score++;
+      });
+      document.getElementById("postResults").textContent = 'You got ${score} out of ${Object.keys(correct).length} correct.';
+    }
+
+    function toggleReferences() {
+      const ref = document.getElementById("references-content");
+      const toggle = document.getElementById("toggle-symbol");
+      if (ref.style.display === "none") {
+        ref.style.display = "block";
+        toggle.textContent = "[-]";
+      } else {
+        ref.style.display = "none";
+        toggle.textContent = "[+]";
+      }
+    }
+
+    // Highlight sidebar link on scroll
+    const sections = document.querySelectorAll("section");
+    const navLinks = document.querySelectorAll(".sidebar a");
+
+    window.addEventListener("scroll", () => {
+      let current = "";
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 100;
+        if (pageYOffset >= sectionTop) {
+          current = section.getAttribute("id");
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove("active");
+        if (link.getAttribute("href") === '#$(current)'){
+          link.classList.add("active");
+        }
+      });
+    });
+
+    // Redirect to external simulation page if clicked
+    document.querySelector('a[href="#simulation"]').addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = "dijkstra-simulation.html"; // your actual simulation page
+    });
+  </script>
+</body>
+</html>

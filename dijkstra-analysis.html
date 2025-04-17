@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dijkstra Analysis</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url("dijkstras_picture_background.png");;
+      margin: 0;
+      padding: 20px;
+      color: #222;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: hsl(243, 90%, 40%);
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    ol, ul {
+      margin-left: 20px;
+    }
+
+    a.button {
+      display: inline-block;
+      background-color: hsl(243, 100%, 49%);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      margin-top: 20px;
+    }
+
+    a.button:hover {
+      background-color: hsl(247, 100%, 35%);
+    }
+    
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      color: hsl(243, 100%, 45%);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Dijkstra's Algorithm</h2>
+    <pre><code>
+function Dijkstra(Graph, source):
+    dist[source] ← 0                      // Initialization
+    create vertex set Q
+    for each vertex v in Graph:
+        if v ≠ source:
+            dist[v] ← INFINITY            // Unknown distance from source to v
+            prev[v] ← UNDEFINED           // Predecessor of v
+        Q.add_with_priority(v, dist[v])
+
+    while Q is not empty:                 // The main loop
+        u ← Q.extract_min()               // Remove and return best vertex
+        for each neighbor v of u:         // only v that are still in Q
+            alt ← dist[u] + length(u, v)
+            if alt < dist[v]:
+                dist[v] ← alt
+                prev[v] ← u
+                Q.decrease_priority(v, alt)
+
+    return dist, prev
+    </code></pre>
+
+    <h2>Time and Space Complexity Analysis</h2>
+    <ol>
+      <li>
+        <strong>Time Complexity:</strong>
+        <ul>
+          <li>Using Min Heap and Adjacency List: <code>O((V + E) log V)</code></li>
+          <li><strong>Breakdown:</strong>
+            <ol>
+              <li>Insert all vertices into priority queue: <code>O(V)</code></li>
+              <li>Extract min operation per vertex: <code>O(V log V)</code></li>
+              <li>Edge relaxations (decrease-key): <code>O(E log V)</code></li>
+            </ol>
+          </li>
+          <li>With array-based priority queue: <code>O(V²)</code></li>
+          <li>With Fibonacci Heap: <code>O(E + V log V)</code> (less commonly used)</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Space Complexity:</strong>
+        <ul>
+          <li>Adjacency List: <code>O(V + E)</code></li>
+          <li>Distance Array: <code>O(V)</code></li>
+          <li>Min Heap: <code>O(V)</code></li>
+          <li>Visited Set (optional): <code>O(V)</code></li>
+          <li><strong>Total:</strong> <code>O(V + E)</code></li>
+        </ul>
+      </li>
+      <li>
+        <strong>Best Use Case:</strong>
+        <ul>
+          <li>For sparse graphs (when <code>E ≈ V</code>)</li>
+          <li>Only works with non-negative edge weights</li>
+        </ul>
+      </li>
+    </ol>
+
+    <a class="button" href="index.html">← Back to Virtual Lab</a>
+  </div>
+</body>
+</html>
