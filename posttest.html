@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Posttest - Dijkstra's Algorithm</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9ff;
+      background: url("dijkstras_picture_background.png");
+      padding: 40px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #ffffff;
+      margin-bottom: 30px;
+    }
+
+    section {
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 30px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    h3 {
+      color: #6200ea;
+    }
+
+    .question {
+      margin-bottom: 20px;
+    }
+
+    .options label {
+      display: block;
+      margin: 5px 0;
+    }
+
+    .button {
+      padding: 10px 20px;
+      background-color: #4a148c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background-color: #6a1b9a;
+    }
+
+    .answer {
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
+    }
+
+    .wrong {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Posttest: Dijkstra's Algorithm Concepts</h1>
+
+  <section id="posttest">
+    <h3>Posttest</h3>
+
+    <div class="question" id="pq1">
+      <p>1. What is the time complexity of Dijikstra's algorithm? (V is the number of vertices in the graph)</p>
+      <div class="options">
+        <label><input type="radio" name="pq1" value="a"> a. O(V)k</label>
+        <label><input type="radio" name="pq1" value="b"> b. O(V^2)</label>
+        <label><input type="radio" name="pq1" value="c"> c. O(log V)</label>
+        <label><input type="radio" name="pq1" value="d"> d. None of the above</label>
+      </div>
+    </div>
+
+    <div class="question" id="pq2">
+      <p>2. Which of the following data structure can help decrease the time complexity of Dijikstra’s algorithm?</p>
+      <div class="options">
+        <label><input type="radio" name="pq2" value="a"> a. Min Priority Queue</label>
+        <label><input type="radio" name="pq2" value="b"> b. Queue</label>
+        <label><input type="radio" name="pq2" value="c"> c. Heap</label>
+        <label><input type="radio" name="pq2" value="d"> d. Stack</label>
+      </div>
+    </div>
+
+    <div class="question" id="pq3">
+      <p>3. Dijkstras Algorithm is used to find: </p>
+      <div class="options">
+        <label><input type="radio" name="pq3" value="a"> a. Cycles in a graph</label>
+        <label><input type="radio" name="pq3" value="b"> b. Single soure shortest path</label>
+        <label><input type="radio" name="pq3" value="c"> c. Network flow</label>
+        <label><input type="radio" name="pq3" value="d"> d. Sorted order of nodes</label>
+      </div>
+    </div>
+
+    <button class="button" onclick="checkAnswers()">Submit Answers</button>
+    <div id="results" class="answer"></div>
+  </section>
+
+  <script>
+    function checkAnswers() {
+      const answers = {
+        pq1: 'b',
+        pq2: 'a',
+        pq3: 'b'
+      };
+
+      let score = 0;
+      let total = Object.keys(answers).length;
+      let resultText = "";
+
+      for (let key in answers) {
+        const selected = document.querySelector(`input[name="${key}"]:checked`);
+        if (selected && selected.value === answers[key]) {
+          score++;
+        }
+      }
+
+      if (score === total) {
+        resultText = `✅ Excellent! You got all ${total} questions right!`;
+        document.getElementById("results").classList.remove("wrong");
+      } else {
+        resultText = `You got ${score} out of ${total} correct. Try again!`;
+        document.getElementById("results").classList.add("wrong");
+      }
+
+      document.getElementById("results").textContent = resultText;
+    }
+  </script>
+</body>
+</html>

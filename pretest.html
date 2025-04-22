@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pretest - Dijkstra's Algorithm</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9ff;
+      background: url("dijkstras_picture_background.png");
+      padding: 40px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #ffffff;
+      margin-bottom: 30px;
+    }
+
+    section {
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 30px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    h3 {
+      color: #6200ea;
+    }
+
+    .question {
+      margin-bottom: 20px;
+    }
+
+    .options label {
+      display: block;
+      margin: 5px 0;
+    }
+
+    .button {
+      padding: 10px 20px;
+      background-color: #4a148c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background-color: #6a1b9a;
+    }
+
+    .answer {
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
+    }
+
+    .wrong {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pretest: Dijkstra's Algorithm Concepts</h1>
+
+  <section id="pretest">
+    <h3>Pretest</h3>
+
+    <div class="question" id="q1">
+      <p>1. Which data structure is best suitable for performing breadth first search?</p>
+      <div class="options">
+        <label><input type="radio" name="q1" value="a"> a. Stack</label>
+        <label><input type="radio" name="q1" value="b"> b. Queue</label>
+        <label><input type="radio" name="q1" value="c"> c. Array</label>
+        <label><input type="radio" name="q1" value="d"> d. None of the above</label>
+      </div>
+    </div>
+
+    <div class="question" id="q2">
+      <p>2. Which data structure is best suitable for performing Depth first search?</p>
+      <div class="options">
+        <label><input type="radio" name="q2" value="a"> a. Stack</label>
+        <label><input type="radio" name="q2" value="b"> b. Queue</label>
+        <label><input type="radio" name="q2" value="c"> c. Array</label>
+        <label><input type="radio" name="q2" value="d"> d. None of the above</label>
+      </div>
+    </div>
+
+    <div class="question" id="q3">
+      <p>3. Given a tree of nodes. We know that the element we want to search is closer to the root node than farther. Which would be the best method to search for it?</p>
+      <div class="options">
+        <label><input type="radio" name="q3" value="a"> a. Binary Search</label>
+        <label><input type="radio" name="q3" value="b"> b. Breadth First Search</label>
+        <label><input type="radio" name="q3" value="c"> c. Depth First Search</label>
+        <label><input type="radio" name="q3" value="d"> d. All are equally good</label>
+      </div>
+    </div>
+
+    <button class="button" onclick="checkAnswers()">Submit Answers</button>
+    <div id="results" class="answer"></div>
+  </section>
+
+  <script>
+    function checkAnswers() {
+      const answers = {
+        q1: 'b',
+        q2: 'a',
+        q3: 'b'
+      };
+
+      let score = 0;
+      let total = Object.keys(answers).length;
+      let resultText = "";
+
+      for (let key in answers) {
+        const selected = document.querySelector(`input[name="${key}"]:checked`);
+        if (selected && selected.value === answers[key]) {
+          score++;
+        }
+      }
+
+      if (score === total) {
+        resultText = `✅ Excellent! You got all ${total} questions right!`;
+        document.getElementById("results").classList.remove("wrong");
+      } else {
+        resultText = `❌ You got ${score} out of ${total} correct. Try again!`;
+        document.getElementById("results").classList.add("wrong");
+      }
+
+      document.getElementById("results").textContent = resultText;
+    }
+  </script>
+</body>
+</html>

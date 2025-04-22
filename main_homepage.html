@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dijkstra's Virtual Lab</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f8ff;
+      font-size: large;
+      margin: 0;
+      background: url("dijkstras_picture_background.png");
+      padding: 40px;
+      line-height: 1.6;
+      color: #1a237e;
+    }
+
+    h1 {
+      text-align: center;
+      color: #ffffff;
+    }
+
+    section {
+      background: #ffffff;
+      border-radius: 40px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      font-size: large;
+      margin-bottom: 40px;
+    }
+
+    h3 {
+      color: #6200ea;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    a {
+      color: #0d47a1;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Toggle for References */
+    #references h3 {
+      cursor: pointer;
+    }
+
+    #toggle-symbol {
+      font-weight: normal;
+      font-size: 18px;
+      margin-left: 5px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dijkstra’s Virtual Lab</h1>
+
+  <section id="aim">
+    <h3>1. Aim</h3>
+    <p>Understand and implement Dijkstra's Shortest Path Algorithm.</p>
+  </section>
+
+  <section id="objectives">
+    <h3>2. Learning Objectives</h3>
+    <ul>
+      <li>Describe 2 real-world scenarios for shortest path algorithms.</li>
+      <li>Visually demonstrate Dijkstra's algorithm.</li>
+      <li>Derive space/time complexity.</li>
+      <li>Apply Dijkstra's in real-world problems.</li>
+    </ul>
+  </section>
+
+  <section id="references">
+    <h3 onclick="toggleReferences()">📚 References <span id="toggle-symbol">[+]</span></h3>
+    <div id="references-content" style="display: none;">
+      <ul>
+        <li><a href="https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm" target="_blank">Wikipedia - Dijkstra's Algorithm</a></li>
+        <li><a href="https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/" target="_blank">GeeksforGeeks - Dijkstra’s Algorithm</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <script>
+    function toggleReferences() {
+      const content = document.getElementById("references-content");
+      const symbol = document.getElementById("toggle-symbol");
+
+      if (content.style.display === "none") {
+        content.style.display = "block";
+        symbol.textContent = "[-]";
+      } else {
+        content.style.display = "none";
+        symbol.textContent = "[+]";
+      }
+    }
+  </script>
+</body>
+</html>
